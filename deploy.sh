@@ -1,22 +1,31 @@
-# Function to handle errors
-handle_error() {
-  echo "Error: $1"
-  exit 1
-}
+#!/bin/bash
 
-# 4a. Stage, Commit, and Push to GitHub
-if git diff-index --quiet HEAD --; then
-  echo "No changes to commit."
+# Step 1: Build the React app
+echo "Building the React app..."
+npm install
+npm run build
+
+# Step 2: Check if there are changes in the build folder to commit
+if [ -n "$(git status --porcelain build)" ]; then
+  echo "Changes detected in the build folder. Committing changes..."
+  git add build
+  git commit -m "Automated commit"
+  git push origin main
 else
-  git add . || handle_error "Failed to stage changes."
-  git commit -m "Automated commit" || handle_error "Failed to commit changes."
-  git push origin main || handle_error "Failed to push changes."
+  echo "No changes to commit."
 fi
 
-# 4b. Install Dependencies and Build the App
-npm install || handle_error "Failed to install dependencies."
-npm run build || handle_error "Build failed."
+# Step 3: Deploy the build folder to Google Cloud Storage using gcloud storage
+BUCKET_NAME="YOUR_BUCKET_NAME"  # Replace with your actual bucket name
+echo "Uploading build folder to Google Cloud Storage bucket: $BUCKET_NAME"
 
-# 4c. Upload to GCS Bucket
-gsutil -m cp -r ./build/* gs://leah-pines-bucket || handle_error "Failed to upload to GCS bucket."
-echo "Build files uploaded successfully."
+# This command uses `gcloud storage` and avoids any Python-related issues
+gcloud storage cp -r build gs://$BUCKET_NAME
+
+# Step 4: Verify deployment
+if [ $? -eq 0 ]; then
+  echo "Deployment completed successfully!"
+else
+  echo "Error: Failed to upload to Google Cloud Storage."
+  exit 1
+fi
