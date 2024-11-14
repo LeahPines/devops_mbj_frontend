@@ -16,7 +16,7 @@ else
 fi
 
 # Step 3: Deploy the build folder to Google Cloud Storage using gcloud storage
-BUCKET_NAME="YOUR_BUCKET_NAME"  # Replace with your actual bucket name
+BUCKET_NAME="leah-pines-bucket"  # Replace with your actual bucket name
 echo "Uploading build folder to Google Cloud Storage bucket: $BUCKET_NAME"
 
 # This command uses `gcloud storage` and avoids any Python-related issues
