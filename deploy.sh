@@ -8,7 +8,7 @@ npm run build
 # Step 2: Check if there are changes in the build folder to commit
 if [ -n "$(git status --porcelain build)" ]; then
   echo "Changes detected in the build folder. Committing changes..."
-  git add build
+  git add .
   git commit -m "Automated commit"
   git push origin main
 else
