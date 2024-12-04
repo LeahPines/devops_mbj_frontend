@@ -15,7 +15,7 @@ function App() {
     <div className="App">
       <header className="App-header">
         <h1>WELCOME to Leah Pines React App!!</h1>
-        <button /*onClick={fetchData}*/ className="fetch-button">Fetch backend</button>
+        <button onClick={fetchData} className="fetch-button">Fetch backend</button>
         <p>{message}</p>
       </header>
     </div>
